@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Equal, Delete, Plus, Minus, X, Divide } from 'lucide-react';
 
 export function Calculator() {
@@ -7,12 +7,16 @@ export function Calculator() {
   const [operation, setOperation] = useState<string | null>(null);
   const [newNumber, setNewNumber] = useState(true);
 
+  const MAX_DIGITS = 12; // 最大桁数を定義
+
   const handleNumber = (num: string) => {
     if (newNumber) {
       setDisplay(num);
       setNewNumber(false);
     } else {
-      setDisplay(display === '0' ? num : display + num);
+      if (display.length < MAX_DIGITS) {
+        setDisplay(display === '0' ? num : display + num);
+      }
     }
   };
 
@@ -43,7 +47,8 @@ export function Calculator() {
         break;
     }
 
-    setDisplay(result.toString());
+    // 結果も12桁に制限
+    setDisplay(result.toString().slice(0, MAX_DIGITS));
     setFirstNumber(null);
     setOperation(null);
     setNewNumber(true);
